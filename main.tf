@@ -13,16 +13,22 @@ provider "aws" {
 provider "template" {
 }
 
+resource "aws_vpc" "tf-demo" {
+   cidr_block: "10.111.0.0/16"
+}
+
+resource "aws_subnet" "tf-demo-sub" {
+  vpc_id     = aws_vpc.tf-demo.id
+  cidr_block = "10.111.1.0/24"
+
+  tags = {
+    Name = "subnet"
+  }
+}
+
 resource "random_uuid" "randomid" {}
 
-resource "aws_iam_user" "circleci" {
-  name = var.user
-  path = "/system/"
-}
 
-resource "aws_iam_access_key" "circleci" {
-  user = aws_iam_user.circleci.name
-}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -43,7 +49,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
-
+  subnet_id     = aws_subnet.tf-demo-sub.id
   tags = {
     Name = "HelloWorld"
   }
@@ -65,33 +71,4 @@ resource "aws_iam_user_policy" "circleci" {
   name   = "AllowCircleCI"
   user   = aws_iam_user.circleci.name
   policy = data.template_file.circleci_policy.rendered
-}
-
-resource "aws_s3_bucket" "app" {
-  tags = {
-    Name = "App Bucket"
-  }
-
-  bucket = "${var.app}.${var.label}.${random_uuid.randomid.result}"
-  acl    = "public-read"
-
-  website {
-    index_document = "index.html"
-    error_document = "error.html"
-  }
-  force_destroy = true
-
-}
-
-resource "aws_s3_bucket_object" "app" {
-  acl          = "public-read"
-  key          = "index.html"
-  bucket       = aws_s3_bucket.app.id
-  content      = file("./assets/index.html")
-  content_type = "text/html"
-
-}
-
-output "Endpoint" {
-  value = aws_s3_bucket.app.website_endpoint
 }
