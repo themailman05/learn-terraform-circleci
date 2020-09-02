@@ -55,20 +55,3 @@ resource "aws_instance" "web" {
   }
 }
 
-data "template_file" "circleci_policy" {
-  template = file("circleci_s3_access.tpl.json")
-  vars = {
-    s3_bucket_arn = aws_s3_bucket.app.arn
-  }
-}
-
-resource "local_file" "circle_credentials" {
-  filename = "tmp/circleci_credentials"
-  content  = "${aws_iam_access_key.circleci.id}\n${aws_iam_access_key.circleci.secret}"
-}
-
-resource "aws_iam_user_policy" "circleci" {
-  name   = "AllowCircleCI"
-  user   = aws_iam_user.circleci.name
-  policy = data.template_file.circleci_policy.rendered
-}
