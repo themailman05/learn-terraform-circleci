@@ -14,7 +14,7 @@ provider "template" {
 }
 
 resource "aws_vpc" "tf-demo" {
-   cidr_block: "10.111.0.0/16"
+   cidr_block = "10.111.0.0/16"
 }
 
 resource "aws_subnet" "tf-demo-sub" {
