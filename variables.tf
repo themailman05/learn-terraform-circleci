@@ -1,4 +1,6 @@
 variable "region" {}
 variable "user" {}
-variable "label" {}
+variable "label" {
+   default="hello"
+}
 variable "app" {}
