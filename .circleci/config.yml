@@ -9,11 +9,11 @@ jobs:
       - checkout
       - setup-remote-docker
       - run:
-        name: build & push docker image
-        command: |
-          docker build .
-          docker tag my_image:latest
-          docker push
+          name: build & push docker image
+          command: |
+            docker build .
+            docker tag my_image:latest
+            docker push
         
   plan-apply:
     working_directory: /tmp/project
