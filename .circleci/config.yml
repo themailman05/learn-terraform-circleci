@@ -6,7 +6,6 @@ jobs:
     machine: true
     steps:
       - checkout
-      - setup-remote-docker
       - run:
           name: build & push docker image
           command: |
