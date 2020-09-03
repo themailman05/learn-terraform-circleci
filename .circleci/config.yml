@@ -1,6 +1,19 @@
 version: 2
 
 jobs:
+
+  unit-test:
+    requires:
+      - build
+    steps:
+      - checkout
+      - run:
+        name: build & push docker image
+        command: |
+          docker build .
+          docker tag my_image:latest
+          docker push
+        
   plan-apply:
     working_directory: /tmp/project
     docker:
@@ -60,6 +73,9 @@ jobs:
 
 workflows:
   version: 2
+  docker:
+    jobs:
+      - build
   plan_approve_apply:
     jobs:
       - plan-apply
