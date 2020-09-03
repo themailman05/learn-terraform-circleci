@@ -3,8 +3,7 @@ version: 2
 jobs:
 
   build:
-    docker:
-      - image: 
+    machine: true
     steps:
       - checkout
       - setup-remote-docker
