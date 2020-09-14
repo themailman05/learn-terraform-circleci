@@ -51,7 +51,7 @@ resource "aws_instance" "web" {
   instance_type = "t3.medium"
   subnet_id     = aws_subnet.tf-demo-sub.id
   tags = {
-    Name = "HelloWorld"
+    Name = "HelloWorld-One"
   }
 }
 
